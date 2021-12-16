@@ -1,3 +1,12 @@
+const createLargeArr = (count ,max) => {
+  let arr = []
+  for(let i = 0; i <= count - 1; i++) {
+    arr.push({integer : Math.random() * max})
+    
+  }
+  return arr
+}
+
 /**
  * [Exercise 1] trimProperties copies an object trimming its properties
  * @param {object} obj - an object with properties that are strings
@@ -8,6 +17,16 @@
  */
 function trimProperties(obj) {
   // ✨ implement
+  let trimmed = {}
+  const props = Object.keys(obj)
+  props.map(key => {
+    if(typeof obj[key] === 'string') {
+      trimmed = {...trimmed, [key]: obj[key].trim()}
+    }
+    else {trimmed = {...trimmed, [key]: obj[key]}}
+    
+  })
+  return trimmed
 }
 
 /**
@@ -20,7 +39,16 @@ function trimProperties(obj) {
  */
 function trimPropertiesMutation(obj) {
   // ✨ implement
+  const props = Object.keys(obj)
+  props.map(key => {
+    if(typeof obj[key] === 'string') {
+      obj[key] = obj[key].trim()
+    }
+    
+  })
+  return obj
 }
+
 
 /**
  * [Exercise 3] findLargestInteger finds the largest integer in an array of objects { integer: 1 }
@@ -32,6 +60,14 @@ function trimPropertiesMutation(obj) {
  */
 function findLargestInteger(integers) {
   // ✨ implement
+  let max = integers[0].integer
+  integers.map(int => {
+    const current = int.integer
+    if(current > max) {
+      max = current
+    }
+  })
+  return max
 }
 
 class Counter {
@@ -41,6 +77,7 @@ class Counter {
    */
   constructor(initialNumber) {
     // ✨ initialize whatever properties are needed
+    this.initialNumber = initialNumber
   }
 
   /**
@@ -57,6 +94,12 @@ class Counter {
    */
   countDown() {
     // ✨ implement
+    if(this.initialNumber < 1) {
+      return 0
+    }
+    else {
+      return this.initialNumber --
+    }
   }
 }
 
@@ -66,6 +109,8 @@ class Seasons {
    */
   constructor() {
     // ✨ initialize whatever properties are needed
+    this.allSeasons = ['spring', 'summer', 'fall', 'winter'],
+    this.currentSeason = 0
   }
 
   /**
@@ -82,8 +127,15 @@ class Seasons {
    */
   next() {
     // ✨ implement
+    if (this.currentSeason >= this.allSeasons.length - 1) {
+      this.currentSeason = 0
+      return this.allSeasons[this.currentSeason]
+    }
+    this.currentSeason ++
+    return this.allSeasons[this.currentSeason]
   }
 }
+   
 
 class Car {
   /**
@@ -93,11 +145,17 @@ class Car {
    * @param {number} mpg - miles the car can drive per gallon of gas
    */
   constructor(name, tankSize, mpg) {
-    this.odometer = 0 // car initilizes with zero miles
-    this.tank = tankSize // car initiazes full of gas
+    this.odometer = 0, // car initilizes with zero miles
+    this.tank = tankSize, // car initiazes full of gas
+    this.tankSize = tankSize,
     // ✨ initialize whatever other properties are needed
+    this.name = name,
+    this.mpg = mpg
+    
   }
-
+  get milesToEmpty() {
+    return this.tank * this.mpg
+  }
   /**
    * [Exercise 6B] Car.prototype.drive adds miles to the odometer and consumes fuel according to mpg
    * @param {string} distance - the distance we want the car to drive
@@ -113,6 +171,16 @@ class Car {
    */
   drive(distance) {
     // ✨ implement
+    if(this.milesToEmpty < distance) {
+      this.odometer += this.milesToEmpty
+      this.tank = 0
+      return this.odometer
+    }
+    else {
+      this.odometer += distance
+      this.tank -= distance / this.mpg
+      return this.odometer
+    }
   }
 
   /**
@@ -128,9 +196,16 @@ class Car {
    */
   refuel(gallons) {
     // ✨ implement
+    if (gallons >= this.tankSize) {
+      this.tank = this.tankSize
+      return this.milesToEmpty
+    }
+    else {
+      this.tank = gallons
+      return this.milesToEmpty
+    }
   }
 }
-
 /**
  * [Exercise 7] Asynchronously resolves whether a number is even
  * @param {number} number - the number to test for evenness
@@ -144,9 +219,12 @@ class Car {
  *    // result is false
  * })
  */
-function isEvenNumberAsync(number) {
+async function isEvenNumberAsync(number) {
   // ✨ implement
+  return number % 2 === 0 ? true : false
 }
+
+
 
 module.exports = {
   trimProperties,
@@ -155,5 +233,6 @@ module.exports = {
   isEvenNumberAsync,
   Counter,
   Seasons,
-  Car,
+  Car
 }
+
